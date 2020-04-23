@@ -29,8 +29,8 @@ namespace StudentsDB.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseSqlServer("Data Source=LEO-ПК\\SQLEXPRESS;Initial Catalog=Students;Integrated Security=True;ConnectRetryCount=0");
-                optionsBuilder.UseSqlite("Data Source=Students.db");
+//       optionsBuilder.UseSqlServer("Data Source=LEO-ПК\\SQLEXPRESS;Initial Catalog=Students;Integrated security=True;ConnectRetryCount=0");
+            optionsBuilder.UseSqlite("Data Source=Students.db");
             }
         }
 
@@ -49,9 +49,11 @@ namespace StudentsDB.Models
 
             modelBuilder.Entity<Classes>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.ClassId);
 
-                entity.Property(e => e.ClassId).HasColumnName("ClassID");
+                entity.Property(e => e.ClassId)
+                    .HasColumnName("ClassID")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.ClassName).HasMaxLength(50);
 
@@ -122,7 +124,11 @@ namespace StudentsDB.Models
 
             modelBuilder.Entity<Students>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.StudentId);
+
+                entity.Property(e => e.StudentId)
+                    .HasColumnName("StudentID")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Address).HasMaxLength(255);
 
@@ -144,24 +150,36 @@ namespace StudentsDB.Models
 
                 entity.Property(e => e.StateOrProvince).HasMaxLength(20);
 
-                entity.Property(e => e.StudentId).HasColumnName("StudentID");
-
                 entity.Property(e => e.StudentNumber).HasMaxLength(30);
             });
 
             modelBuilder.Entity<StudentsAndClasses>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.StudentClassId)
+                    .HasName("PK_Students And Classes_1");
 
                 entity.ToTable("Students And Classes");
+
+                entity.Property(e => e.StudentClassId)
+                    .HasColumnName("StudentClassID")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.ClassId).HasColumnName("ClassID");
 
                 entity.Property(e => e.Grade).HasMaxLength(30);
 
-                entity.Property(e => e.StudentClassId).HasColumnName("StudentClassID");
-
                 entity.Property(e => e.StudentId).HasColumnName("StudentID");
+
+                entity.HasOne(d => d.Class)
+                    .WithMany(p => p.StudentsAndClasses)
+                    .HasForeignKey(d => d.ClassId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Students And Classes_Classes");
+
+                entity.HasOne(d => d.Student)
+                    .WithMany(p => p.StudentsAndClasses)
+                    .HasForeignKey(d => d.StudentId)
+                    .HasConstraintName("FK_Students And Classes_Students");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -39,6 +39,7 @@ namespace StudentsDB.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_Classes", x => x.ClassID);
                 });
 
             migrationBuilder.CreateTable(
@@ -115,6 +116,7 @@ namespace StudentsDB.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_Students", x => x.StudentID);
                 });
 
             migrationBuilder.CreateTable(
@@ -128,16 +130,36 @@ namespace StudentsDB.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_Students And Classes_1", x => x.StudentClassID);
+                    table.ForeignKey(
+                        name: "FK_Students And Classes_Classes",
+                        column: x => x.ClassID,
+                        principalTable: "Classes",
+                        principalColumn: "ClassID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Students And Classes_Students",
+                        column: x => x.StudentID,
+                        principalTable: "Students",
+                        principalColumn: "StudentID",
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Students And Classes_ClassID",
+                table: "Students And Classes",
+                column: "ClassID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Students And Classes_StudentID",
+                table: "Students And Classes",
+                column: "StudentID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Assignments");
-
-            migrationBuilder.DropTable(
-                name: "Classes");
 
             migrationBuilder.DropTable(
                 name: "Departments");
@@ -152,10 +174,13 @@ namespace StudentsDB.Migrations
                 name: "Results");
 
             migrationBuilder.DropTable(
-                name: "Students");
+                name: "Students And Classes");
 
             migrationBuilder.DropTable(
-                name: "Students And Classes");
+                name: "Classes");
+
+            migrationBuilder.DropTable(
+                name: "Students");
         }
     }
 }

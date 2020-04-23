@@ -9,7 +9,7 @@ using StudentsDB.Models;
 namespace StudentsDB.Migrations
 {
     [DbContext(typeof(StudentsDBContext))]
-    [Migration("20200423034635_Initial")]
+    [Migration("20200423080518_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,6 +87,8 @@ namespace StudentsDB.Migrations
 
                     b.Property<short?>("Year")
                         .HasColumnType("INTEGER");
+
+                    b.HasKey("ClassId");
 
                     b.ToTable("Classes");
                 });
@@ -182,6 +184,10 @@ namespace StudentsDB.Migrations
 
             modelBuilder.Entity("StudentsDB.Models.Students", b =>
                 {
+                    b.Property<int>("StudentId")
+                        .HasColumnName("StudentID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Address")
                         .HasColumnType("TEXT")
                         .HasMaxLength(255);
@@ -225,19 +231,21 @@ namespace StudentsDB.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(20);
 
-                    b.Property<int>("StudentId")
-                        .HasColumnName("StudentID")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("StudentNumber")
                         .HasColumnType("TEXT")
                         .HasMaxLength(30);
+
+                    b.HasKey("StudentId");
 
                     b.ToTable("Students");
                 });
 
             modelBuilder.Entity("StudentsDB.Models.StudentsAndClasses", b =>
                 {
+                    b.Property<int>("StudentClassId")
+                        .HasColumnName("StudentClassID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ClassId")
                         .HasColumnName("ClassID")
                         .HasColumnType("INTEGER");
@@ -246,15 +254,32 @@ namespace StudentsDB.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(30);
 
-                    b.Property<int>("StudentClassId")
-                        .HasColumnName("StudentClassID")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int?>("StudentId")
                         .HasColumnName("StudentID")
                         .HasColumnType("INTEGER");
 
+                    b.HasKey("StudentClassId")
+                        .HasName("PK_Students And Classes_1");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("StudentId");
+
                     b.ToTable("Students And Classes");
+                });
+
+            modelBuilder.Entity("StudentsDB.Models.StudentsAndClasses", b =>
+                {
+                    b.HasOne("StudentsDB.Models.Classes", "Class")
+                        .WithMany("StudentsAndClasses")
+                        .HasForeignKey("ClassId")
+                        .HasConstraintName("FK_Students And Classes_Classes")
+                        .IsRequired();
+
+                    b.HasOne("StudentsDB.Models.Students", "Student")
+                        .WithMany("StudentsAndClasses")
+                        .HasForeignKey("StudentId")
+                        .HasConstraintName("FK_Students And Classes_Students");
                 });
 #pragma warning restore 612, 618
         }

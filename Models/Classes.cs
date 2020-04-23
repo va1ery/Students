@@ -5,6 +5,11 @@ namespace StudentsDB.Models
 {
     public partial class Classes
     {
+        public Classes()
+        {
+            StudentsAndClasses = new HashSet<StudentsAndClasses>();
+        }
+
         public int ClassId { get; set; }
         public string ClassName { get; set; }
         public int? DepartmentId { get; set; }
@@ -16,5 +21,7 @@ namespace StudentsDB.Models
         public string Location { get; set; }
         public string DaysAndTimes { get; set; }
         public string Notes { get; set; }
+
+        public virtual ICollection<StudentsAndClasses> StudentsAndClasses { get; set; }
     }
 }

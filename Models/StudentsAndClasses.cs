@@ -9,5 +9,8 @@ namespace StudentsDB.Models
         public int ClassId { get; set; }
         public int? StudentId { get; set; }
         public string Grade { get; set; }
+
+        public virtual Classes Class { get; set; }
+        public virtual Students Student { get; set; }
     }
 }
