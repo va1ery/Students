@@ -29,7 +29,8 @@ namespace StudentsDB.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=LEO-ПК\\SQLEXPRESS;Initial Catalog=Students;Integrated Security=True;ConnectRetryCount=0");
+//                optionsBuilder.UseSqlServer("Data Source=LEO-ПК\\SQLEXPRESS;Initial Catalog=Students;Integrated Security=True;ConnectRetryCount=0");
+                optionsBuilder.UseSqlite("Data Source=Students.db");
             }
         }
 
