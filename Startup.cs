@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +7,13 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StudentsDB.Models;
+using Microsoft.EntityFrameworkCore.Sqlite;
+using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace StudentsDB
 {
@@ -23,6 +29,9 @@ namespace StudentsDB
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+    //        string conString = Configuration["ConnectionStrings:DefaultConnection"];
+            services.AddDbContext<StudentsDBContext>(options =>  options.UseSqlite("Data Source=Students.db"));
             services.AddControllersWithViews();
         }
 
